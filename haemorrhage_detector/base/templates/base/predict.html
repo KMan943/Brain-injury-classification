@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Haemorrhage Detection
+{% endblock title %}
+
+{% block content %}
+    <div class='form-container'>
+        <h1 class="heading"> Haemorrhage And Fracture Detection from CT Scans of the brain and the skull </h1>
+
+        <form method="POST" enctype='multipart/form-data'>
+            {% csrf_token %}
+
+            {{ form }}
+
+            <input type="submit"
+                value="Upload"
+                class="submit-btn"
+            >
+        </form> 
+    </div>
+{% endblock content %}

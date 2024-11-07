@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Results
+{% endblock title %}
+
+
+{% block content %}
+    <div class="result-container">
+        <h1 class="heading">
+            Results
+        </h1>
+        
+        <img class="result-img" src="media/patients/brain/20.jpg" alt="brain_img" >
+        <div class='result-text'>The above image has {{brain_pred_class}} Haemorrhage </div>
+        <img class="result-img" src="media/patients/bone/20.jpg" alt="bone_img" >
+        
+        <div class='result-text'>The above image has {{bone_pred}} </div>
+        
+        
+
+        <a href="{% url "base:predict" %}" class="reset-btn"> Check another set of images </a>
+    </div>
+        
+
+{% endblock content %}
