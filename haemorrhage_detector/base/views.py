@@ -3,8 +3,8 @@ from base.forms import PatientForm
 import tensorflow as tf
 
 
-brain_model_path = 'https://drive.google.com/drive/folders/1KRTpq-pqhy46FECyGMrzlFnbKiX56HMH?usp=drive_link'
-bone_model_path = 'https://drive.google.com/drive/folders/1RJc2M3FKlI84TzXhKHnIuuhg19tyx_ZB?usp=drive_link'
+brain_model_path = 'https://drive.google.com/drive/folders/1tachaxwqk1PfXsm38U3pcQ86Yyo75A7i?usp=sharing'
+bone_model_path = 'https://drive.google.com/drive/folders/1-9s0OEWCd_KuFSqWjTJabLWEOTTCJqxm?usp=sharing'
 saved_brain_model_layer = tf.keras.layers.TFSMLayer(brain_model_path, call_endpoint="serving_default")
 saved_bone_model_layer = tf.keras.layers.TFSMLayer(bone_model_path, call_endpoint="serving_default")
 
