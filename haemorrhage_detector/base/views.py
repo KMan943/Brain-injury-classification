@@ -74,7 +74,7 @@ def make_bone_prediction(image_path):
     else:
         bone_pred = "Fracture"
 
-    return bone_pred
+    return bone_pred, predicted_probability
 
 def predict(request):
     if request.method == "POST":
@@ -85,12 +85,12 @@ def predict(request):
             bone_image_path = img.bone_image.path
 
             brain_pred_class , brain_pred_prob = make_brain_prediction(brain_image_path)
-            bone_pred = make_bone_prediction(bone_image_path)
+            bone_pred , bone_pred_prob = make_bone_prediction(bone_image_path)
 
             # print(bone_image_path)
             # print(brain_image_path)
 
-            context = {'brain_img' : brain_image_path , 'bone_img' : bone_image_path , 'brain_pred_class' : brain_pred_class  , 'brain_pred_prob' : brain_pred_prob , 'bone_pred' : bone_pred}
+            context = {'brain_img' : brain_image_path , 'bone_img' : bone_image_path , 'brain_pred_class' : brain_pred_class  , 'brain_pred_prob' : brain_pred_prob , 'bone_pred' : bone_pred , 'bone_pred_prob' : bone_pred_prob}
             return render(request , 'base/results.html' , context=context)
 
         else:
