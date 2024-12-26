@@ -5,6 +5,9 @@ import cv2
 import numpy as np
 
 
+brain_model_download_link = 'https://drive.google.com/file/d/1-5HFTklEXsAiF5ovF1hk7xNGtkTAqY3s/view?usp=sharing'
+bone_model_download_link = 'https://drive.google.com/file/d/1-3QoEf5YWJhnbqvHvqpEdk0dcuwHwPz_/view?usp=sharing'
+
 brain_model_path = r'C:\Users\kman0\Downloads\college projects\siddhi 2.0\models\Res101-brainModel.keras'
 bone_model_path = r'C:\Users\kman0\Downloads\college projects\siddhi 2.0\models\Res101-boneModel.keras'
 # saved_brain_model_layer = tf.keras.layers.TFSMLayer(brain_model_path, call_endpoint="serving_default")
