@@ -1,41 +1,27 @@
 from django.shortcuts import render
 from base.forms import PatientForm
 import tensorflow as tf
+import cv2
+import numpy as np
 
 
-brain_model_path = 'https://drive.google.com/drive/folders/1tachaxwqk1PfXsm38U3pcQ86Yyo75A7i?usp=sharing'
-bone_model_path = 'https://drive.google.com/drive/folders/1-9s0OEWCd_KuFSqWjTJabLWEOTTCJqxm?usp=sharing'
-saved_brain_model_layer = tf.keras.layers.TFSMLayer(brain_model_path, call_endpoint="serving_default")
-saved_bone_model_layer = tf.keras.layers.TFSMLayer(bone_model_path, call_endpoint="serving_default")
+brain_model_path = r'C:\Users\kman0\Downloads\college projects\siddhi 2.0\models\Res101-brainModel.keras'
+bone_model_path = r'C:\Users\kman0\Downloads\college projects\siddhi 2.0\models\Res101-boneModel.keras'
+# saved_brain_model_layer = tf.keras.layers.TFSMLayer(brain_model_path, call_endpoint="serving_default")
+# saved_bone_model_layer = tf.keras.layers.TFSMLayer(bone_model_path, call_endpoint="serving_default")
 
-brain_model = tf.keras.Sequential([saved_brain_model_layer])
-bone_model = tf.keras.Sequential([saved_bone_model_layer])
+# brain_model = tf.keras.Sequential([saved_brain_model_layer])
+# bone_model = tf.keras.Sequential([saved_bone_model_layer])
 
-def preprocess_image(image_path):
-    img = tf.keras.preprocessing.image.load_img(image_path) 
-    img_array = tf.keras.preprocessing.image.img_to_array(img)
-    img_array = tf.expand_dims(img_array, 0) 
-    img_array = img_array / 255.0 
-
-    return img_array
+brain_model = tf.keras.models.load_model(brain_model_path)
+bone_model = tf.keras.models.load_model(bone_model_path)
 
 def make_brain_prediction(image_path):
-    img_array = preprocess_image(image_path)
-    predictions = brain_model(img_array)
-    if isinstance(predictions, dict):
-        
-        prediction_tensor = predictions['dense_1']
-        
-        if hasattr(prediction_tensor, 'numpy'):
-            prediction_array = prediction_tensor.numpy()
-        else:
-            prediction_array = prediction_tensor
-    else:
-        prediction_array = predictions.numpy()  
-
-
-    
-    predicted_class = prediction_array[0].argmax(axis=-1)  
+    img = cv2.imread(image_path)
+    img_array = np.array([img])
+    predictions = brain_model.predict(img_array)
+     
+    predicted_class = np.argmax(predictions[0])  
     if predicted_class==0 :
         haemorrhage = 'Intraventricular' 
     elif predicted_class==1 :
@@ -49,32 +35,24 @@ def make_brain_prediction(image_path):
     elif predicted_class==5 :
         haemorrhage = 'No'
 
-    predicted_probability = prediction_array[0][predicted_class]  
+    predicted_probability = predictions[0][predicted_class]  
 
     return haemorrhage, predicted_probability
 
 def make_bone_prediction(image_path):
-    img_array = preprocess_image(image_path)
-    predictions = bone_model(img_array)
-    if isinstance(predictions, dict):
-       
-        prediction_tensor = predictions['dense_1']
-        
-        if hasattr(prediction_tensor, 'numpy'):
-            prediction_array = prediction_tensor.numpy()
-        else:
-            prediction_array = prediction_tensor
-    else:
-        prediction_array = predictions.numpy()  
-    predicted_probability = prediction_array[0]
-
+    img = cv2.imread(image_path)
+    img_array = np.array([img])
+    predictions = bone_model.predict(img_array)
+    predicted_probability = predictions[0]
+    prob = predicted_probability
     if predicted_probability < 0.5:
         bone_pred = "No Fracture"
+        prob = 1-predicted_probability
 
     else:
         bone_pred = "Fracture"
 
-    return bone_pred, predicted_probability
+    return bone_pred, prob
 
 def predict(request):
     if request.method == "POST":
